@@ -96,7 +96,7 @@ public class BotonFacadeImpl implements BotonFacade {
 				return obsAcciones.abrirAplicacion(valor.trim());
 			}
 			if (idTipo == TipoAccion.REPRODUCIR_SONIDO) {
-				return obsAcciones.reproducirFuente(valor.trim());
+				return obsAcciones.reproducirVariasFuentes(valor.trim());
 			}
 			if (idTipo == TipoAccion.COMANDO_CMD) {
 				return obsAcciones.ejecutarComando(valor);

@@ -53,15 +53,21 @@ public class ObsAcciones {
 		}
 	}
 
-	public Respuesta reproducirFuente(String nombreFuente) {
+	public Respuesta reproducirVariasFuentes(String valor) {
+		if (valor == null || valor.isBlank()) {
+			Respuesta respuesta = Respuesta.internalBadRequest();
+			respuesta.setMessage("No hay fuentes configuradas");
+			return respuesta;
+		}
+
 		try {
-			obsService.reproducirFuente(nombreFuente);
+			obsService.reproducirVariasFuentes(valor);
 			Respuesta respuesta = Respuesta.ok();
-			respuesta.setMessage("Fuente reproducida correctamente");
+			respuesta.setMessage("Fuentes reproducidas correctamente");
 			return respuesta;
 		} catch (Exception e) {
 			Respuesta respuesta = Respuesta.internalServerError();
-			respuesta.setMessage("No se pudo reproducir la fuente: " + e.getMessage());
+			respuesta.setMessage("No se pudieron reproducir las fuentes: " + e.getMessage());
 			return respuesta;
 		}
 	}

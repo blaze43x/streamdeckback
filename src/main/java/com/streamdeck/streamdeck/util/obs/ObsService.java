@@ -58,7 +58,19 @@ public class ObsService {
 		return nombres;
 	}
 
-	public void reproducirFuente(String nombreFuente) {
+	public void reproducirVariasFuentes(String valor) {
+		if (valor == null || valor.isBlank()) {
+			return;
+		}
+		for (String linea : valor.split("[\\n;]+")) {
+			String nombre = linea.trim();
+			if (!nombre.isEmpty()) {
+				reproducirFuente(nombre);
+			}
+		}
+	}
+
+	private void reproducirFuente(String nombreFuente) {
 		String requestId = UUID.randomUUID().toString();
 		String json = """
 			{
