@@ -2,6 +2,9 @@ package com.streamdeck.streamdeck.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,35 +29,47 @@ public class Boton {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@Column(name = "cnombre", length = 15)
+	@Column(name = "cnombre", length = 15, nullable = false)
 	private String cnombre;
 
-	@Column(name = "ccolor", length = 7)
+	@Column(name = "ccolor", length = 7, nullable = false)
 	private String ccolor;
 
-	@Column(name = "cicono", columnDefinition = "TEXT")
+	@Column(name = "cicono", columnDefinition = "TEXT", nullable = false)
 	private String cicono;
 
-	@Column(name = "bactivo")
-	private Boolean bactivo;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idtipoaccion")
-	private TipoAccion tipoAccion;
-
-	@Column(name = "caccion", columnDefinition = "TEXT")
-	private String caccion;
-
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idperfil", nullable = false)
 	private Perfil perfil;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "idusuarioplugin", nullable = false)
+	private UsuarioPlugin usuarioPlugin;
+
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(name = "cparametro", columnDefinition = "jsonb")
+	private String cparametro;
+
+	@Column(name = "bactivo", nullable = false)
+	private Boolean bactivo;
 
 	@Column(name = "dfecreg")
 	private LocalDateTime dfecreg;
 
 	@Column(name = "dfecupd")
 	private LocalDateTime dfecupd;
+
+	@PrePersist
+	public void prePersist() {
+		this.dfecreg = LocalDateTime.now();
+		this.dfecupd = LocalDateTime.now();
+	}
+
+	@PreUpdate
+	public void preUpdate() {
+		this.dfecupd = LocalDateTime.now();
+	}
 }

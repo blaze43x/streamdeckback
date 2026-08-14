@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,16 +26,16 @@ public class Perfil {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@Column(name = "cnombre", length = 20)
+	@Column(name = "cnombre", length = 20, nullable = false)
 	private String cnombre;
 
-	@Column(name = "bactivo")
+	@Column(name = "bactivo", nullable = false)
 	private Boolean bactivo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idusuario", nullable = false)
 	private Usuario usuario;
 
@@ -42,4 +44,15 @@ public class Perfil {
 
 	@Column(name = "dfecupd")
 	private LocalDateTime dfecupd;
+
+	@PrePersist
+	public void prePersist() {
+		this.dfecreg = LocalDateTime.now();
+		this.dfecupd = LocalDateTime.now();
+	}
+
+	@PreUpdate
+	public void preUpdate() {
+		this.dfecupd = LocalDateTime.now();
+	}
 }

@@ -10,6 +10,8 @@ public interface UsuarioService {
 
 	Usuario get(Integer id);
 
+	Usuario getByCorreo(String correo);
+
 	Usuario save(Usuario usuario);
 
 	void delete(Integer id);

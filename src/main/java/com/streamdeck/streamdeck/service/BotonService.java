@@ -15,4 +15,6 @@ public interface BotonService {
 	void delete(Integer id);
 
 	List<Boton> listarPorPerfil(Integer idPerfil);
+
+	List<Boton> listarPorUsuarioPlugin(Integer idUsuarioPlugin);
 }

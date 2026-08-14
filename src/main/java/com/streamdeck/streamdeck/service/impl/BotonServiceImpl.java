@@ -40,4 +40,9 @@ public class BotonServiceImpl implements BotonService {
 	public List<Boton> listarPorPerfil(Integer idPerfil) {
 		return botonRepository.findByPerfil_Id(idPerfil);
 	}
+
+	@Override
+	public List<Boton> listarPorUsuarioPlugin(Integer idUsuarioPlugin) {
+		return botonRepository.findByUsuarioPlugin_Id(idUsuarioPlugin);
+	}
 }

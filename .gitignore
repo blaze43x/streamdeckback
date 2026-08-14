@@ -5,6 +5,10 @@ target/
 !**/src/test/**/target/
 application.properties
 
+# Clave privada JWT (no versionar)
+src/main/resources/keys/privada.key
+src/main/resources/keys/publica.key
+
 
 ### STS ###
 .apt_generated

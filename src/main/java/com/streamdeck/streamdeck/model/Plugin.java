@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -18,25 +21,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "usuario")
-public class Usuario {
+@Table(name = "plugin")
+public class Plugin {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@Column(name = "cnombre", length = 100, nullable = false)
+	@Column(name = "cnombre", length = 50, nullable = false)
 	private String cnombre;
 
-	@Column(name = "ccorreo", length = 150, nullable = false)
-	private String ccorreo;
+	@Column(name = "cruta", columnDefinition = "TEXT", nullable = false)
+	private String cruta;
 
-	@Column(name = "cpassword", columnDefinition = "TEXT", nullable = false)
-	private String cpassword;
-
-	@Column(name = "bactivo", nullable = false)
-	private Boolean bactivo;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "idautor", nullable = false)
+	private Usuario autor;
 
 	@Column(name = "dfecreg")
 	private LocalDateTime dfecreg;
@@ -48,16 +49,10 @@ public class Usuario {
 	public void prePersist() {
 		this.dfecreg = LocalDateTime.now();
 		this.dfecupd = LocalDateTime.now();
-		if(this.bactivo == null) {
-			this.bactivo = Boolean.TRUE;
-		}
 	}
 
 	@PreUpdate
 	public void preUpdate() {
 		this.dfecupd = LocalDateTime.now();
-		if(this.bactivo == null) {
-			this.bactivo = Boolean.TRUE;
-		}
 	}
 }
