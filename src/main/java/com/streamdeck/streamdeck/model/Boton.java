@@ -46,15 +46,12 @@ public class Boton {
 	private Perfil perfil;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idusuarioplugin", nullable = false)
+	@JoinColumn(name = "idusuarioplugin")
 	private UsuarioPlugin usuarioPlugin;
 
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(name = "cparametro", columnDefinition = "jsonb")
 	private String cparametro;
-
-	@Column(name = "bactivo", nullable = false)
-	private Boolean bactivo;
 
 	@Column(name = "dfecreg")
 	private LocalDateTime dfecreg;

@@ -1,14 +1,19 @@
 package com.streamdeck.streamdeck.security;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.streamdeck.streamdeck.model.Rol;
+import com.streamdeck.streamdeck.model.Usuario;
+import com.streamdeck.streamdeck.service.UsuarioService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtService jwtService;
+	private final UsuarioService usuarioService;
 
 	@Override
 	protected void doFilterInternal(
@@ -39,15 +45,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		if (jwtService.isTokenValid(token)
 				&& SecurityContextHolder.getContext().getAuthentication() == null) {
 			String correo = jwtService.extractCorreo(token);
-			UsernamePasswordAuthenticationToken authentication =
-					new UsernamePasswordAuthenticationToken(
-							correo,
-							null,
-							Collections.emptyList());
-			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+			Usuario usuario = usuarioService.getByCorreo(correo);
+
+			if (usuario != null && Boolean.TRUE.equals(usuario.getBactivo())) {
+				UsernamePasswordAuthenticationToken authentication =
+						new UsernamePasswordAuthenticationToken(
+								correo,
+								null,
+								List.of(new SimpleGrantedAuthority(resolverAuthority(usuario))));
+				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}
 		}
 
 		filterChain.doFilter(request, response);
+	}
+
+	private String resolverAuthority(Usuario usuario) {
+		if (usuario.getRol() != null && Integer.valueOf(Rol.ADMIN).equals(usuario.getRol().getId())) {
+			return "ROLE_ADMIN";
+		}
+		return "ROLE_USUARIO";
 	}
 }

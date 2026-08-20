@@ -15,4 +15,8 @@ public interface PluginService {
 	void delete(Integer id);
 
 	List<Plugin> listarPorAutor(Integer idAutor);
+
+	List<Plugin> listarActivos();
+
+	List<Plugin> listarPorAutorActivos(Integer idAutor);
 }

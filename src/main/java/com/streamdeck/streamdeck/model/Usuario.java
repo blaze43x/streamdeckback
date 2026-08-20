@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -38,6 +41,10 @@ public class Usuario {
 	@Column(name = "bactivo", nullable = false)
 	private Boolean bactivo;
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "idrol", nullable = false)
+	private Rol rol;
+
 	@Column(name = "dfecreg")
 	private LocalDateTime dfecreg;
 
@@ -48,16 +55,26 @@ public class Usuario {
 	public void prePersist() {
 		this.dfecreg = LocalDateTime.now();
 		this.dfecupd = LocalDateTime.now();
-		if(this.bactivo == null) {
+
+		if (this.bactivo == null) {
 			this.bactivo = Boolean.TRUE;
+		}
+		
+		if (this.rol == null) {
+			this.rol = new Rol(Rol.USUARIO);
 		}
 	}
 
 	@PreUpdate
 	public void preUpdate() {
 		this.dfecupd = LocalDateTime.now();
-		if(this.bactivo == null) {
+
+		if (this.bactivo == null) {
 			this.bactivo = Boolean.TRUE;
+		}
+
+		if (this.rol == null) {
+			this.rol = new Rol(Rol.USUARIO);
 		}
 	}
 }

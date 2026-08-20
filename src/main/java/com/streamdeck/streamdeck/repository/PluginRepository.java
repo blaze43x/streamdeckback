@@ -9,4 +9,8 @@ import com.streamdeck.streamdeck.model.Plugin;
 public interface PluginRepository extends JpaRepository<Plugin, Integer> {
 
 	List<Plugin> findByAutor_Id(Integer idAutor);
+
+	List<Plugin> findByBactivoTrue();
+
+	List<Plugin> findByAutor_IdAndBactivoTrue(Integer idAutor);
 }

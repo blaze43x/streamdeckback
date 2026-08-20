@@ -32,9 +32,6 @@ public class Perfil {
 	@Column(name = "cnombre", length = 20, nullable = false)
 	private String cnombre;
 
-	@Column(name = "bactivo", nullable = false)
-	private Boolean bactivo;
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idusuario", nullable = false)
 	private Usuario usuario;

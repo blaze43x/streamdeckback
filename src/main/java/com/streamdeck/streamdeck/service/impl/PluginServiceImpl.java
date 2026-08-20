@@ -40,4 +40,14 @@ public class PluginServiceImpl implements PluginService {
 	public List<Plugin> listarPorAutor(Integer idAutor) {
 		return pluginRepository.findByAutor_Id(idAutor);
 	}
+
+	@Override
+	public List<Plugin> listarActivos() {
+		return pluginRepository.findByBactivoTrue();
+	}
+
+	@Override
+	public List<Plugin> listarPorAutorActivos(Integer idAutor) {
+		return pluginRepository.findByAutor_IdAndBactivoTrue(idAutor);
+	}
 }

@@ -2,6 +2,9 @@ package com.streamdeck.streamdeck.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,9 +38,19 @@ public class Plugin {
 	@Column(name = "cruta", columnDefinition = "TEXT", nullable = false)
 	private String cruta;
 
+	@Column(name = "cdescripcion", columnDefinition = "TEXT")
+	private String cdescripcion;
+
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(name = "cparametro", columnDefinition = "jsonb")
+	private String cparametro;
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idautor", nullable = false)
 	private Usuario autor;
+
+	@Column(name = "bactivo", nullable = false)
+	private Boolean bactivo;
 
 	@Column(name = "dfecreg")
 	private LocalDateTime dfecreg;
@@ -49,10 +62,16 @@ public class Plugin {
 	public void prePersist() {
 		this.dfecreg = LocalDateTime.now();
 		this.dfecupd = LocalDateTime.now();
+		if (this.bactivo == null) {
+			this.bactivo = Boolean.TRUE;
+		}
 	}
 
 	@PreUpdate
 	public void preUpdate() {
 		this.dfecupd = LocalDateTime.now();
+		if (this.bactivo == null) {
+			this.bactivo = Boolean.TRUE;
+		}
 	}
 }
